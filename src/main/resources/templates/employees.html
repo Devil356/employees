@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+HI
+
+</body>
+</html>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<html>
+
+<head>
+    <title>Employees</title>
+    <base href="${pageContext.request.contextPath}"/>
+    <link rel="stylesheet" href="webjars/datatables/1.10.21/css/dataTables.bootstrap4.min.css">
+    <script type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js" defer></script>
+    <script type="text/javascript" src="webjars/bootstrap/4.5.3/js/bootstrap.min.js" defer></script>
+    <script type="text/javascript" src="webjars/datatables/1.10.21/js/jquery.dataTables.min.js" defer></script>
+    <script type="text/javascript" src="webjars/datatables/1.10.21/js/dataTables.bootstrap4.min.js" defer></script>
+
+</head>
+<body>
+<script type="text/javascript" src="employees/resources/js/employees.datatable.js" defer></script>
+<section>
+    <h2>Employees</h2>
+    <br><br>
+    <table id="datatable" class="employee" style="width:100%">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Lastname</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <%--        <c:forEach items="${employees}" var="employee">--%>
+        <%--            <jsp:useBean id="employee" type="com.arsenev.employees.model.Employee"/>--%>
+        <%--            <tr>--%>
+            <%--                <td>${employee.name}</td>--%>
+            <%--                <td>${employee.lastname}</td>--%>
+            <%--                <td>${employee.email}</td>--%>
+            <%--                <td>${employee.phoneNumber}</td>--%>
+            <%--                <td><a href="employees?action=update&id=${employee.id}">Update</a></td>--%>
+            <%--                <td><a href="employees?action=delete&id=${employee.id}">Delete</a></td>--%>
+            <%--            </tr>--%>
+        <%--        </c:forEach>--%>
+    </table>
+</section>
+</body>
+</html>

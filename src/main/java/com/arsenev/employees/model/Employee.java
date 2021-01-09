@@ -12,17 +12,31 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Data
 public class Employee {
+
     public static final int START_SEQ = 100000;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_generator")
-    @SequenceGenerator(name = "emloyee_generator", sequenceName = "employee_seq", initialValue = START_SEQ, allocationSize = 1)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "employee_generator"
+    )
+    @SequenceGenerator(
+            name = "employee_generator",
+            sequenceName = "employee_seq",
+            initialValue = START_SEQ,
+            allocationSize = 1
+    )
     private Long id;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "lastname")
     private String lastname;
+
     @Column(name = "email")
     private String email;
+
     @Column(name = "phone_number")
     private String phoneNumber;
 }

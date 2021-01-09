@@ -28,4 +28,8 @@ public class EmployeeTestData {
                 EMPLOYEE9
         );
     }
+
+    public static Employee getNew(){
+        return new Employee(null, "Новый", "Новов", "new@gmail.com", "89998989988");
+    }
 }

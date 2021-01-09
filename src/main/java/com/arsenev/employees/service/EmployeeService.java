@@ -22,4 +22,11 @@ public class EmployeeService {
         log.debug("Done findAll() method. Size of Employees list: "+emps.size());
         return emps;
     }
+
+    public Employee create(Employee e){
+        log.debug("Enter create() method...");
+        Employee employee = repository.save(e);
+        log.debug("Done create() method. Created employee: "+employee);
+        return employee;
+    }
 }
