@@ -1,6 +1,4 @@
-var employeeAjaxUrl = "rest/employees";
-
-var dataTable;
+var employeeAjaxUrl = "rest/";
 
 $(function () {
         $('#datatable').DataTable({
