@@ -3,7 +3,6 @@ package com.arsenev.employees.web;
 import com.arsenev.employees.util.ValidationUtil;
 import com.arsenev.employees.util.exception.ErrorInfo;
 import com.arsenev.employees.util.exception.ErrorType;
-import com.arsenev.employees.util.exception.IllegalRequestDataException;
 import com.arsenev.employees.util.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +44,7 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
-    @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }

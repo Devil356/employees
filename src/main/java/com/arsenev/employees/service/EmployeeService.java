@@ -21,12 +21,8 @@ public class EmployeeService {
     public Employee get(Long id) {
         log.debug("get()...");
         Employee employee = null;
-        try {
-            employee = repository.findById(id)
-                    .orElseThrow(() -> new NotFoundException(""));
-        } catch (NotFoundException e) {
-            log.error("Employee with id " + id + " does not exist!");
-        }
+        employee = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(""));
         log.debug("Done get(). Employee: " + employee);
         return employee;
     }

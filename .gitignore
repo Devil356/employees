@@ -36,3 +36,6 @@ build/
 out/
 /mvnw
 /mvnw.cmd
+/node_modules/
+/package.json
+/yarn.lock
