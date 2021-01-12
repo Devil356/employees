@@ -1,63 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>Employees</title>
-    <base href="${pageContext.request.contextPath}"/>
+
+    <link rel="stylesheet" href="webjars/bootstrap/4.5.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="webjars/noty/3.1.4/demo/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="webjars/datatables/1.10.21/css/dataTables.bootstrap4.min.css">
-    <script type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js" defer></script>
+    <link rel="stylesheet" href="webjars/noty/3.1.4/lib/noty.css"/>
+
+    <!--    http://stackoverflow.com/a/24070373/548473-->
+    <script type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script type="text/javascript" src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script type="text/javascript" src="webjars/bootstrap/4.5.3/js/bootstrap.min.js" defer></script>
     <script type="text/javascript" src="webjars/datatables/1.10.21/js/jquery.dataTables.min.js" defer></script>
     <script type="text/javascript" src="webjars/datatables/1.10.21/js/dataTables.bootstrap4.min.js" defer></script>
+    <script type="text/javascript" src="webjars/noty/3.1.4/lib/noty.min.js" defer></script>
 </head>
 <body>
+<script type="text/javascript" src="js/employees.common.js" defer></script>
 <script type="text/javascript" src="js/employees.datatable.js" defer></script>
-<section>
-    <h2>Employees</h2>
-    <br><br>
-    <table id="datatable" class="employee" style="width:100%">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Lastname</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <!--        <%&#45;&#45;-->
-        <!--        <c:forEach items="${employees}" var="employee">&#45;&#45;%>-->
-        <!--            <%&#45;&#45;-->
-        <!--            <jsp:useBean id="employee" type="com.arsenev.employees.model.Employee"/>-->
-        <!--            &#45;&#45;%>-->
-        <!--            <%&#45;&#45;-->
-        <!--            <tr>&#45;&#45;%>-->
-        <!--                <%&#45;&#45;-->
-        <!--                <td>${employee.name}</td>-->
-        <!--                &#45;&#45;%>-->
-        <!--                <%&#45;&#45;-->
-        <!--                <td>${employee.lastname}</td>-->
-        <!--                &#45;&#45;%>-->
-        <!--                <%&#45;&#45;-->
-        <!--                <td>${employee.email}</td>-->
-        <!--                &#45;&#45;%>-->
-        <!--                <%&#45;&#45;-->
-        <!--                <td>${employee.phoneNumber}</td>-->
-        <!--                &#45;&#45;%>-->
-        <!--                <%&#45;&#45;-->
-        <!--                <td><a href="employees?action=update&id=${employee.id}">Update</a></td>-->
-        <!--                &#45;&#45;%>-->
-        <!--                <%&#45;&#45;-->
-        <!--                <td><a href="employees?action=delete&id=${employee.id}">Delete</a></td>-->
-        <!--                &#45;&#45;%>-->
-        <!--                <%&#45;&#45;-->
-        <!--            </tr>-->
-        <!--            &#45;&#45;%>-->
-        <!--            <%&#45;&#45;-->
-        <!--        </c:forEach>-->
-        <!--        &#45;&#45;%>-->
-    </table>
-</section>
+<script type="text/javascript" src="js/ws.js" defer></script>
+<div class="jumbotron pt-4">
+    <div class="container">
+        <h3 class="text-center">Employees</h3>
+        <div class="card border-dark">
+            <div class="card-body pb-0">
+                <form id="filter">
+                    <div class="row">
+                        <div class="col-3">
+                            <label for="fname"/>
+                            <input class="form-control" name="fname" id="fname" autocomplete="off" placeholder="Name">
+                        </div>
+                        <div class="col-3">
+                            <label for="flastname"/>
+                            <input class="form-control" name="flastname" id="flastname" autocomplete="off" placeholder="Lastname">
+                        </div>
+                        <div class="col-3">
+                            <label for="femail"/>
+                            <input class="form-control" name="femail" id="femail" autocomplete="off" placeholder="Email">
+                        </div>
+                        <div class="col-3">
+                            <label for="fphoneNumber"/>
+                            <input class="form-control" name="fphoneNumber" id="fphoneNumber" autocomplete="off" placeholder="Phone Number">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-right">
+                <button class="btn btn-danger" onclick="clearFilter()">
+                    <span class="fa fa-remove"></span>
+                    Очистить фильтр
+                </button>
+                <button class="btn btn-primary" onclick="ctx.updateTable()">
+                    <span class="fa fa-filter"></span>
+                    Фильтр
+                </button>
+            </div>
+        </div>
+        <br>
+        <button class="btn btn-primary" onclick="add()">
+            <span class="fa fa-plus"></span>
+            Добавить
+        </button>
+        <table class="table table-striped" id="datatable">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Lastname</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="editRow">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle"></h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="closeNoty()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="detailsForm">
+                    <input type="hidden" id="id" name="id">
+
+                    <div class="form-group">
+                        <label for="name" class="col-form-label">Имя</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Имя">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastname" class="col-form-label">Фамилия</label>
+                        <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Фамилия">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="col-form-label">Email</label>
+                        <input type="text" id="email" name="email" class="form-control" placeholder="Email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phoneNumber" class="col-form-label">Номер телефона</label>
+                        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"
+                               placeholder="Номер телефона">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeNoty()">
+                    <span class="fa fa-close"></span>
+                    Закрыть
+                </button>
+                <button type="button" class="btn btn-primary" onclick="save()">
+                    <span class="fa fa-check"></span>
+                    Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

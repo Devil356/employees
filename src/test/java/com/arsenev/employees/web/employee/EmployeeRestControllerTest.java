@@ -58,7 +58,7 @@ public class EmployeeRestControllerTest {
     @Test
     void create() throws Exception {
         Employee newEmployee = EmployeeTestData.getNew();
-        //TODO: create JsonUtil class
+        //TODO: refactor JsonUtil class
         ObjectMapper mapper = new ObjectMapper();
         ResultActions action = mockMvc.perform(post("/rest")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,21 +1,28 @@
 #*Work in progress...*
-# Getting Started
 
-### Reference Documentation
-For further reference, please consider the following sections:
+Мини-веб приложение c данными о персонале с поддержкой 
+многопользовательского редактирования с использованием 
+следующих технологий:
+- DataTables
+- WebSocket
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.4.1/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.4.1/maven-plugin/reference/html/#build-image)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/2.4.1/reference/htmlsingle/#boot-features-developing-web-applications)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.4.1/reference/htmlsingle/#boot-features-jpa-and-spring-data)
-* [Validation](https://docs.spring.io/spring-boot/docs/2.4.1/reference/htmlsingle/#boot-features-validation)
+Фреймворк DataTables позволяет отрисовать таблицу, а WebSocket, 
+в свою очередь, при любых изменениях таблицы, посылает запрос серверу 
+на обновление таблицы.
 
-### Guides
-The following guides illustrate how to use some features concretely:
+В качестве базы данных выбрана база:
+- PostgreSQL
 
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+PostreSQL - отказоустойчивое решение, которое позволяет быстро записывать
+большие объемы данных, быстрее, чем это делают остальные базы.
+
+В качестве логгера была выбрана библиотека Logback. С помощью библиотеки,
+настроен вывод в консоль только самых необходимых сообщений
+(уровень debug). Из классов логирование происходит на этом же уровне.
+
+Для валидации приходящих из UI данных используется Spring Validation
+
+Для сборки приложения необходимо воспользоваться сборщиком
+проектов Maven с помощью команды 
+- ***mvn clean package***
 
