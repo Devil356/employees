@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+//TODO: create description
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Query(

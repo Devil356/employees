@@ -1,5 +1,6 @@
 package com.arsenev.employees.util;
 
+//TODO: create description
 public class ValidationUtil {
 
     //  http://stackoverflow.com/a/28565320/548473

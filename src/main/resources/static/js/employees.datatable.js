@@ -39,6 +39,7 @@ function drawTable() {
     })
 }
 
+//TODO: create description
 function clearFilter() {
     $("#filter")[0].reset();
     $.get(mealAjaxUrl, updateTableByData);

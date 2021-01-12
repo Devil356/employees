@@ -125,6 +125,7 @@ function save() {
 
 var failedNote
 
+//TODO: create description
 function closeNoty() {
     if (failedNote) {
         failedNote.close()
@@ -132,6 +133,7 @@ function closeNoty() {
     }
 }
 
+//TODO: create description
 function successNoty(key) {
     closeNoty()
     new Noty({
@@ -142,6 +144,7 @@ function successNoty(key) {
     }).show()
 }
 
+//TODO: create description
 function failNoty(jqXHR) {
     closeNoty()
     var errorInfo = jqXHR.responseJSON
