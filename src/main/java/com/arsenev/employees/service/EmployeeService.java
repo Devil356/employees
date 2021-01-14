@@ -22,7 +22,7 @@ public class EmployeeService {
         log.debug("get()...");
         Employee employee = null;
         employee = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException(""));
+                .orElseThrow(() -> new NotFoundException("Employee with id " + id + " not found."));
         log.debug("Done get(). Employee: " + employee);
         return employee;
     }
@@ -41,9 +41,18 @@ public class EmployeeService {
         return e;
     }
 
+    public void update(Employee employee) {
+        log.debug("update()...");
+        //TODO: create checkNotFound
+        Employee e = repository.save(employee);
+        log.debug("Done update(). Updated employee: " + e);
+    }
+
     public void delete(Long id) {
         log.debug("delete()...");
-        repository.deleteById(id);
+        if (repository.delete(id) == 0) {
+            throw new NotFoundException("Employee with id " + id + " not found.");
+        }
         log.debug("Done delete(). Id of deleted employee: " + id);
     }
 

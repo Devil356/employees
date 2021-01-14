@@ -2,12 +2,13 @@ package com.arsenev.employees.repository;
 
 import com.arsenev.employees.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
-//TODO: create description
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Query(
@@ -24,5 +25,15 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             @Param("email") String email,
             @Param("phoneNumber") String phoneNumber
     );
+
+//    https://stackoverflow.com/questions/44022076/jparepository-not-supported-for-dml-operations-delete-query/47066201
+    @Transactional
+    @Modifying
+    @Query(
+            "DELETE " +
+                    "FROM Employee e " +
+                    "WHERE e.id=:id"
+    )
+    int delete(@Param("id") Long id);
 
 }

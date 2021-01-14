@@ -24,13 +24,15 @@ import static com.arsenev.employees.util.exception.ErrorType.*;
 /**
  * Ловит все эксепшены, возникающие в контроллерах, помеченных
  * аннотацией RestController.
+ * О принятых правилах ошибок:
+ * http://stackoverflow.com/a/22358422/548473
  */
 @RestControllerAdvice(annotations = RestController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
 public class ExceptionInfoHandler {
     private static final Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
-    //  http://stackoverflow.com/a/22358422/548473
+
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(NotFoundException.class)
     public ErrorInfo handleError(HttpServletRequest req, NotFoundException e) {

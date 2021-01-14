@@ -1,7 +1,8 @@
 package com.arsenev.employees.util.exception;
 
-//TODO: create description
-
+/**
+ * Объект для передачи на UI с информацией об ошибке.
+ */
 public class ErrorInfo {
     private final String url;
     private final ErrorType type;

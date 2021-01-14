@@ -37,6 +37,12 @@ public abstract class AbstractEmployeeController {
         return e;
     }
 
+    protected void update(Employee employee) {
+        log.debug("update()...");
+        service.update(employee);
+        log.debug("Done update().");
+    }
+
     protected void delete(Long id) {
         log.debug("delete()...");
         service.delete(id);

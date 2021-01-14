@@ -32,7 +32,7 @@ function connect() {
 /**
  * Создание запроса серверу с той целью, чтобы обновить таблицу. Запрос происходит
  * в методах сохранения (employees.common.js#save()) и удаления (employees.common.js#delete())
- * записи в таблице.
+ * записей в таблице.
  */
 function sendReq() {
     stompClient.send("/app/requestForUpdate", {}, JSON.stringify({'id': 0}))

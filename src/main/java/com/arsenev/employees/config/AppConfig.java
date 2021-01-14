@@ -12,14 +12,6 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
 
     /**
-     * https://stackoverflow.com/a/46947975/548473
-     */
-    @Bean
-    Module module() {
-        return new Hibernate5Module();
-    }
-
-    /**
      * Инициализация ObjectMapper для последующего использования статических
      * методов класса в тестах.
      * @param objectMapper - инжектируемый бин.
@@ -28,4 +20,6 @@ public class AppConfig {
     public void storeObjectMapper(ObjectMapper objectMapper) {
         JsonUtil.setMapper(objectMapper);
     }
+
+
 }

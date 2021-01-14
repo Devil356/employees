@@ -14,6 +14,7 @@ public class EmployeeTestData {
     public static Employee EMPLOYEE7 = new Employee(100006L, "Работник7", "Работников7", "rabotnik7@gmail.com", "89995848397");
     public static Employee EMPLOYEE8 = new Employee(100007L, "Работник8", "Работников8", "rabotnik8@gmail.com", "89995848398");
     public static Employee EMPLOYEE9 = new Employee(100008L, "Работник9", "Работников9", "rabotnik9@gmail.com", "89995848399");
+    public static Long NOT_FOUND = 1000000L;
 
     public static List<Employee> getAll() {
         return List.of(
@@ -31,5 +32,8 @@ public class EmployeeTestData {
 
     public static Employee getNew(){
         return new Employee(null, "Новый", "Новов", "new@gmail.com", "89998989988");
+    }
+    public static Employee getUpdated(){
+        return new Employee(100008L, "Обновленный", "Обновленов", "updated@gmail.com", "89998989988");
     }
 }

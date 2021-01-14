@@ -1,6 +1,14 @@
+/**
+ * Глобальная переменная, адрес к ресурсам Rest контроллера.
+ * @type {string}
+ */
 var employeeAjaxUrl = "rest/"
 
-//TODO: create description
+/**
+ * Глобальная переменная, инициализируется каждый раз во время отрисовки таблицы,
+ * с учетом фильтра по полям. При каждой инициализации перерисовывает таблицу.
+ * @type {{ajaxUrl: string, updateTable: ctx.updateTable}}
+ */
 var ctx = {
     ajaxUrl: employeeAjaxUrl,
     updateTable: function () {
@@ -8,7 +16,7 @@ var ctx = {
             type: "GET",
             url: employeeAjaxUrl + "filter",
             data: $("#filter").serialize()
-        }).done(updateTableByData);
+        }).done(updateTableByData)
     }
 }
 
@@ -39,8 +47,10 @@ function drawTable() {
     })
 }
 
-//TODO: create description
+/**
+ * Очищает фильтр и перерисовывает таблицу.
+ */
 function clearFilter() {
-    $("#filter")[0].reset();
-    $.get(mealAjaxUrl, updateTableByData);
+    $("#filter")[0].reset()
+    $.get(employeeAjaxUrl, updateTableByData)
 }
