@@ -26,6 +26,7 @@ import static com.arsenev.employees.util.exception.ErrorType.*;
  * аннотацией RestController.
  * О принятых правилах ошибок:
  * http://stackoverflow.com/a/22358422/548473
+ * Красивое описание ошибок на стороне клиента в разработкее.
  */
 @RestControllerAdvice(annotations = RestController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
