@@ -14,7 +14,7 @@ var ctx = {
     updateTable: function () {
         $.ajax({
             type: "GET",
-            url: employeeAjaxUrl + "filter",
+            url: employeeAjaxUrl+"filter",
             data: $("#filter").serialize()
         }).done(updateTableByData)
     }
@@ -26,7 +26,7 @@ var ctx = {
  * Основная конфигурация (источник данных, пагинация) расположена в
  * файле (employees.common.js)
  */
-function drawTable() {
+function drawTable(page) {
     makeEditable({
         "columns": [
             {"data": "name"},
@@ -43,8 +43,9 @@ function drawTable() {
                 "orderable": false,
                 "render": renderDeleteBtn
             }
-        ]
-    })
+        ],
+        "pageable":false
+    }, page)
 }
 
 /**

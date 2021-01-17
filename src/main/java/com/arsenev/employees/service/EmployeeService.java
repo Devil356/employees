@@ -6,10 +6,13 @@ import com.arsenev.employees.repository.EmployeeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
@@ -60,12 +63,23 @@ public class EmployeeService {
             @Nullable String name,
             @Nullable String lastname,
             @Nullable String email,
-            @Nullable String phoneNumber
+            @Nullable String phoneNumber,
+            @Nullable Integer page,
+            @Nullable Integer size
     ) {
         log.debug("getFilter() with parameters: name:{}, lastname:{}," +
-                "email:{}, phoneNumber:{}", name, lastname, email, phoneNumber);
-        List<Employee> filteredList = repository.getFilter(name, lastname, email, phoneNumber);
+                "email:{}, phoneNumber:{}, page:{}, size:{}", name, lastname, email, phoneNumber, page, size);
+        List<Employee> filteredList = repository.getFilter(name, lastname, email, phoneNumber,
+                PageRequest.of(page, size));
         log.debug("Done getFilter(). Size of filtered list: " + filteredList.size());
         return filteredList;
+    }
+
+    public List<Employee> getAll(Integer page, Integer size) {
+        log.debug("getAll(int, int)...");
+        List<Employee> employees = repository.findAll(PageRequest.of(page, size)).stream()
+                .collect(Collectors.toList());
+        log.debug("Done getAll(int, int)... Size of list: " + employees.size());
+        return employees;
     }
 }

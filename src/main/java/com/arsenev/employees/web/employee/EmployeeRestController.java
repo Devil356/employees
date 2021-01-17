@@ -31,10 +31,21 @@ public class EmployeeRestController extends AbstractEmployeeController {
 
     private static final Logger log = LoggerFactory.getLogger(EmployeeRestController.class);
 
+//    @GetMapping
+//    public List<Employee> findAll() {
+//        return super.getAll();
+//    }
+
     @GetMapping
-    public List<Employee> findAll() {
-        return super.getAll();
+    public List<Employee> findAll(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        log.debug("page value is: "+ page);
+        log.debug("size value is: "+ size);
+        return super.getAll(page, size);
     }
+
 
     @GetMapping("/{id}")
     public Employee getOne(@PathVariable Long id) {
@@ -70,8 +81,11 @@ public class EmployeeRestController extends AbstractEmployeeController {
             @RequestParam(name = "fname") @Nullable String name,
             @RequestParam(name = "flastname") @Nullable String lastname,
             @RequestParam(name = "femail") @Nullable String email,
-            @RequestParam(name = "fphoneNumber") @Nullable String phoneNumber
+            @RequestParam(name = "fphoneNumber") @Nullable String phoneNumber,
+            @RequestParam(name = "pageNumber", defaultValue = "0") @Nullable Integer page,
+            @RequestParam(name = "pageSize", defaultValue = "6") @Nullable Integer size
     ) {
-        return super.getFilter(name, lastname, email, phoneNumber);
+
+        return super.getFilter(name, lastname, email, phoneNumber, page, size);
     }
 }

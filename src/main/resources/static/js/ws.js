@@ -8,7 +8,7 @@ var stompClient = null
 
 $(function () {
     connect()
-    drawTable()
+    drawTable(0)
 })
 
 /**

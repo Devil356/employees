@@ -18,14 +18,15 @@ var form
  * параметры, которые для каждой таблицы индивидуальны. Например,
  * содержание колонок (параметр columns[]).
  */
-function makeEditable(datatableOpts) {
+function makeEditable(datatableOpts, page) {
     ctx.datatableApi = $("#datatable").DataTable(
         $.extend(true, datatableOpts, {
             "ajax": {
-                "url": employeeAjaxUrl,
+                "url": employeeAjaxUrl+"?page="+page,
                 "dataSrc": ""
             },
-            "info": true
+            "info": true,
+            paging:false
         })
     )
     form = $('#detailsForm');
@@ -118,6 +119,9 @@ function renderDeleteBtn(data, type, row) {
  * параметра @param data
  */
 function updateTableByData(data){
+    var totalNumberOfEmployees = ()=>{
+
+    }
     ctx.datatableApi.clear().rows.add(data).draw()
 }
 
@@ -197,4 +201,24 @@ function getFormData(form){
     });
 
     return indexed_array;
+}
+
+function previousPage(){
+
+}
+
+function nextPage(){
+
+}
+
+function toPage(event){
+    event.preventDefault() //для того, чтобы не осуществлялось обновление страницы
+    var i = document.getElementById("pageNumber").value
+    console.log(i)
+    // document.getElementById("pageNumber").value = "" //для стирания значения поля
+    ctx.updateTable()
+}
+
+function pagination(){
+
 }

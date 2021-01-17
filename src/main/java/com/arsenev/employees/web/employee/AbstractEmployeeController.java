@@ -5,6 +5,9 @@ import com.arsenev.employees.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
@@ -19,6 +22,13 @@ public abstract class AbstractEmployeeController {
         log.debug("getAll()...");
         List<Employee> employees = service.getAll();
         log.debug("Done getAll(). Employees list size: " + employees.size());
+        return employees;
+    }
+
+    protected List<Employee> getAll(Integer page, Integer size) {
+        log.debug("getAll(int, int)...");
+        List<Employee> employees = service.getAll(page, size);
+        log.debug("Done getAll(int, int). Size of list: " + employees.size());
         return employees;
     }
 
@@ -53,11 +63,13 @@ public abstract class AbstractEmployeeController {
             @Nullable String name,
             @Nullable String lastname,
             @Nullable String email,
-            @Nullable String phoneNumber
+            @Nullable String phoneNumber,
+            @Nullable Integer page,
+            @Nullable Integer size
     ) {
         log.debug("getFilter() with parameters: name:{}, lastname:{}," +
-                "email:{}, phoneNumber:{}", name, lastname, email, phoneNumber);
-        List<Employee> filteredList = service.getFilter(name, lastname, email, phoneNumber);
+                "email:{}, phoneNumber:{}, page:{}, size:{}", name, lastname, email, phoneNumber, page, size);
+        List<Employee> filteredList = service.getFilter(name, lastname, email, phoneNumber, page, size);
         log.debug("Done getFilter(). Size of filtered list: " + filteredList.size());
         return filteredList;
     }

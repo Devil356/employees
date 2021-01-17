@@ -34,15 +34,18 @@
                         </div>
                         <div class="col-3">
                             <label for="flastname"/>
-                            <input class="form-control" name="flastname" id="flastname" autocomplete="off" placeholder="Lastname">
+                            <input class="form-control" name="flastname" id="flastname" autocomplete="off"
+                                   placeholder="Lastname">
                         </div>
                         <div class="col-3">
                             <label for="femail"/>
-                            <input class="form-control" name="femail" id="femail" autocomplete="off" placeholder="Email">
+                            <input class="form-control" name="femail" id="femail" autocomplete="off"
+                                   placeholder="Email">
                         </div>
                         <div class="col-3">
                             <label for="fphoneNumber"/>
-                            <input class="form-control" name="fphoneNumber" id="fphoneNumber" autocomplete="off" placeholder="Phone Number">
+                            <input class="form-control" name="fphoneNumber" id="fphoneNumber" autocomplete="off"
+                                   placeholder="Phone Number">
                         </div>
                     </div>
                 </form>
@@ -75,6 +78,32 @@
             </tr>
             </thead>
         </table>
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button type="button" class="btn btn-secondary" onclick="previousPage()">Previous page</button>
+                <button type="button" class="btn btn-secondary" onclick="nextPage()">Next page</button>
+                <!--                <button type="button" class="btn btn-secondary">3</button>-->
+                <!--                <button type="button" class="btn btn-secondary">4</button>-->
+                <!--                <button type="button" class="btn btn-secondary">5</button>-->
+                <!--                <button type="button" class="btn btn-secondary">6</button>-->
+                <!--                <button type="button" class="btn btn-secondary">7</button>-->
+                <!--                <button type="button" class="btn btn-secondary">8</button>-->
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text" id="btnGroupAddon">@</div>
+                </div>
+                <div id="pagination">
+                    <script>
+                        pagination()
+                    </script>
+                </div>
+                <form id="pageDetails">
+                    <label for="pageNumber"/>
+                    <input type="text" name="pageNumber" id="pageNumber" class="form-control" placeholder="Введите номер страницы">
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
