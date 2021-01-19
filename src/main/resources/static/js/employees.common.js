@@ -25,7 +25,8 @@ function makeEditable(datatableOpts) {
                 "url": employeeAjaxUrl,
                 "dataSrc": ""
             },
-            "info": true
+            "info": true,
+            "deferRender": true
         })
     )
     form = $('#detailsForm');

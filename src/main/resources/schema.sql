@@ -12,4 +12,4 @@ CREATE TABLE employee
     phone_number VARCHAR NOT NULL
 );
 
-CREATE UNIQUE INDEX employee_unique_email_idx ON employee (email);
+-- CREATE UNIQUE INDEX employee_unique_email_idx ON employee (email);
