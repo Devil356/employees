@@ -11,13 +11,6 @@ var employeeAjaxUrl = "rest/"
  */
 var ctx = {
     ajaxUrl: employeeAjaxUrl,
-    updateTable: function () {
-        $.ajax({
-            type: "GET",
-            url: employeeAjaxUrl + "filter",
-            data: $("#filter").serialize()
-        }).done(updateTableByData)
-    }
 }
 
 /**
@@ -29,10 +22,22 @@ var ctx = {
 function drawTable() {
     makeEditable({
         "columns": [
-            {"data": "name"},
-            {"data": "lastname"},
-            {"data": "email"},
-            {"data": "phoneNumber"},
+            {
+                "data": "name",
+                "searchable": true
+            },
+            {
+                "data": "lastname",
+                "searchable": true
+            },
+            {
+                "data": "email",
+                "searchable": true
+            },
+            {
+                "data": "phoneNumber",
+                "searchable": true
+            },
             {
                 "defaultContent": "",
                 "orderable": false,
@@ -45,12 +50,4 @@ function drawTable() {
             }
         ]
     })
-}
-
-/**
- * Очищает фильтр и перерисовывает таблицу.
- */
-function clearFilter() {
-    $("#filter")[0].reset()
-    $.get(employeeAjaxUrl, updateTableByData)
 }

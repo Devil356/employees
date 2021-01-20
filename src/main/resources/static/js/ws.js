@@ -20,11 +20,12 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame)
 
-        /**
-         * После того, как от сервера приходит рассылка, происходит обновление таблицы
-         */
-        stompClient.subscribe('/topic/updateTable', plug => {
-            ctx.updateTable()
+        stompClient.subscribe('/topic/updateTable', update => {
+            ctx.datatableApi.ajax.reload(null, false)
+        })
+
+        stompClient.subscribe('/topic/edit', edit => {
+            checkIfEdit(JSON.parse(edit.body).id)
         })
     })
 }
@@ -34,8 +35,16 @@ function connect() {
  * в методах сохранения (employees.common.js#save()) и удаления (employees.common.js#delete())
  * записей в таблице.
  */
-function sendReq() {
-    stompClient.send("/app/requestForUpdate", {}, JSON.stringify({'id': 0}))
+function sendSaveReq(request) {
+    stompClient.send("/app/requestForUpdate", {}, JSON.stringify(request))
+}
+
+function sendDeleteReq(request) {
+    stompClient.send("/app/requestForUpdate", {}, JSON.stringify(request))
+}
+
+function sendEditReq(id) {
+    stompClient.send("/app/requestForEdit", {}, JSON.stringify({"id": id}))
 }
 
 

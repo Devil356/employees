@@ -11,6 +11,9 @@
  */
 var form
 
+var ajaxData
+
+var editedId
 /**
  * Данный метод является родителем для создания таблиц. Метод содержит
  * в себе общие настройки для создания таблиц.
@@ -21,12 +24,20 @@ var form
 function makeEditable(datatableOpts) {
     ctx.datatableApi = $("#datatable").DataTable(
         $.extend(true, datatableOpts, {
+            processing: true,
+            serverSide: true,
             "ajax": {
-                "url": employeeAjaxUrl,
-                "dataSrc": ""
+                url: employeeAjaxUrl,
+                "data": function (d) {
+                    ajaxData = d;
+                    // console.log(d)
+                    return $.extend({}, d, {
+                        "search": JSON.stringify(getFormData($('.header')))
+                    })
+                },
             },
             "info": true,
-            "deferRender": true
+            "searching": false,
         })
     )
     form = $('#detailsForm');
@@ -39,6 +50,12 @@ function makeEditable(datatableOpts) {
         failNoty(jqXHR)
     })
 }
+
+$(document).ready(function () {
+    $('.header').bind("keyup change", function () {
+        ctx.datatableApi.draw()
+    })
+})
 
 /**
  * Глобальная переменная с информацией об ошибке.
@@ -54,7 +71,7 @@ function failNoty(jqXHR) {
     closeNoty()
     var errorInfo = jqXHR.responseJSON
     failedNote = new Noty({
-        text:"<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + errorInfo.typeMessage + "<br>",
+        text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + errorInfo.typeMessage + "<br>",
         type: "error",
         layout: "bottomRight"
     }).show()
@@ -115,26 +132,20 @@ function renderDeleteBtn(data, type, row) {
 }
 
 /**
- * Перерисовывает таблицу из данных, взятых из переданного
- * параметра @param data
- */
-function updateTableByData(data){
-    ctx.datatableApi.clear().rows.add(data).draw()
-}
-
-/**
  * Метод открывает форму редактирования работника с переданным id в
  * качестве параметра @param id и заполняет форму уже существующими
  * данными работника.
  */
 function updateRow(id) {
+    editedId = id
     form.find(":input").val("")
-    $.get(ctx.ajaxUrl + id, function (data){
-        $.each(data, function (key, value){
-            form.find("input[name='"+ key +"']").val(value)
+    $.get(ctx.ajaxUrl + id, function (data) {
+        $.each(data, function (key, value) {
+            form.find("input[name='" + key + "']").val(value)
         })
         $("#editRow").modal()
     })
+    sendEditReq(id)
 }
 
 /**
@@ -145,11 +156,12 @@ function deleteRow(id) {
     if (confirm("Вы уверены?")) {
         $.ajax({
             type: "DELETE",
-            url: ctx.ajaxUrl + id
-        }).done(function (){
-            sendReq()
-            ctx.updateTable()
-            successNoty("Удалено.")
+            url: ctx.ajaxUrl + id,
+            success: function (data) {
+                sendDeleteReq(ajaxData)
+                // ctx.datatableApi.ajax.reload(null, false)
+                successNoty("Удалено.")
+            }
         })
     }
 }
@@ -173,12 +185,13 @@ function save() {
         url: employeeAjaxUrl,
         dataType: 'json',
         contentType: 'application/json',
-        data: JSON.stringify(getFormData(form))
-    }).done(function (){
-        sendReq()
-        $("#editRow").modal("hide")
-        ctx.updateTable()
-        successNoty("Успешно!")
+        data: JSON.stringify(getFormData(form)),
+        success: function (data) {
+            console.log(data)
+            $("#editRow").modal("hide")
+            sendSaveReq(ajaxData)
+            successNoty("Успешно!")
+        }
     })
 }
 
@@ -189,13 +202,21 @@ function save() {
  * @param form - глобальная переменная формы с данными о добавляемом/изменяемом сотруднике.
  * @returns массив с данными в формате JSON.
  */
-function getFormData(form){
+function getFormData(form) {
     var unindexed_array = form.serializeArray();
     var indexed_array = {};
 
-    $.map(unindexed_array, function(n, i){
+    $.map(unindexed_array, function (n, i) {
         indexed_array[n['name']] = n['value'];
     });
 
     return indexed_array;
+}
+
+//TODO:implement this method
+function checkIfEdit(id){
+    if (editedId==id){
+        $("#modalTitle").html("YOU EDIT THE SAME VALUE!")
+        console.log("YOU EDIT THE SAME VALUE!")
+    }
 }

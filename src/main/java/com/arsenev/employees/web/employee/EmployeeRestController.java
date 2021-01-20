@@ -2,8 +2,13 @@ package com.arsenev.employees.web.employee;
 
 
 import com.arsenev.employees.model.Employee;
+import com.arsenev.employees.repository.EmployeeRepository;
+import com.arsenev.employees.util.EmployeeWithDatatableSettings;
+import com.arsenev.employees.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +19,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * RestController для передачи данных для отрисовки в Datatables.
@@ -29,11 +36,19 @@ import java.util.List;
 public class EmployeeRestController extends AbstractEmployeeController {
     public static final String REST_URL = "/rest";
 
+    @Autowired
+    private EmployeeRepository repository;
+
     private static final Logger log = LoggerFactory.getLogger(EmployeeRestController.class);
 
     @GetMapping
-    public List<Employee> findAll() {
-        return super.getAll();
+    public EmployeeWithDatatableSettings findAll(
+            @RequestParam(name = "draw") Integer draw,
+            @RequestParam(name = "start") Integer start,
+            @RequestParam(name = "length") Integer length,
+            @RequestParam(name = "search", required = false) String searchJson
+    ) {
+        return super.getAll(draw, start, length, searchJson);
     }
 
     @GetMapping("/{id}")
@@ -63,15 +78,5 @@ public class EmployeeRestController extends AbstractEmployeeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         super.delete(id);
-    }
-
-    @GetMapping("/filter")
-    public List<Employee> getFilter(
-            @RequestParam(name = "fname") @Nullable String name,
-            @RequestParam(name = "flastname") @Nullable String lastname,
-            @RequestParam(name = "femail") @Nullable String email,
-            @RequestParam(name = "fphoneNumber") @Nullable String phoneNumber
-    ) {
-        return super.getFilter(name, lastname, email, phoneNumber);
     }
 }

@@ -2,6 +2,7 @@ package com.arsenev.employees.web.employee;
 
 import com.arsenev.employees.model.Employee;
 import com.arsenev.employees.service.EmployeeService;
+import com.arsenev.employees.util.EmployeeWithDatatableSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,16 @@ public abstract class AbstractEmployeeController {
     @Autowired
     private EmployeeService service;
 
-    protected List<Employee> getAll() {
+    protected EmployeeWithDatatableSettings getAll(
+            Integer draw,
+            Integer start,
+            Integer length,
+            String searchJson
+    ) {
         log.debug("getAll()...");
-        List<Employee> employees = service.getAll();
-        log.debug("Done getAll(). Employees list size: " + employees.size());
-        return employees;
+        EmployeeWithDatatableSettings e = service.getAll(draw, start, length, searchJson);
+        log.debug("Done getAll(). Employees list size: " + e.getData().size());
+        return e;
     }
 
     protected Employee get(Long id) {
@@ -49,16 +55,10 @@ public abstract class AbstractEmployeeController {
         log.debug("Done delete(). Id of deleted employee: " + id);
     }
 
-    protected List<Employee> getFilter(
-            @Nullable String name,
-            @Nullable String lastname,
-            @Nullable String email,
-            @Nullable String phoneNumber
-    ) {
-        log.debug("getFilter() with parameters: name:{}, lastname:{}," +
-                "email:{}, phoneNumber:{}", name, lastname, email, phoneNumber);
-        List<Employee> filteredList = service.getFilter(name, lastname, email, phoneNumber);
-        log.debug("Done getFilter(). Size of filtered list: " + filteredList.size());
-        return filteredList;
+    protected Long count() {
+        log.debug("count()...");
+        Long count = service.count();
+        log.debug("Done count().");
+        return count;
     }
 }

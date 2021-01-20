@@ -1,15 +1,23 @@
 package com.arsenev.employees.service;
 
+import com.arsenev.employees.util.EmployeeWithDatatableSettings;
+import com.arsenev.employees.util.JsonUtil;
 import com.arsenev.employees.util.exception.NotFoundException;
 import com.arsenev.employees.model.Employee;
 import com.arsenev.employees.repository.EmployeeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
@@ -27,11 +35,25 @@ public class EmployeeService {
         return employee;
     }
 
-    public List<Employee> getAll() {
-        log.debug("getAll()...");
-        List<Employee> employees = repository.findAll();
-        log.debug("Done getAll(). Employees list size: " + employees.size());
-        return employees;
+    public EmployeeWithDatatableSettings getAll(
+            Integer draw,
+            Integer start,
+            Integer length,
+            String searchJson
+    ) {
+        log.debug("getAll() with parameters: start:{}, length:{}, searchJson:{}",
+                start, length, searchJson);
+        Map<String, String> search = JsonUtil.readValue(searchJson, Map.class);
+        int page = start / length;
+        Page<Employee> employees = repository.findAll(
+                search.get("name"),
+                search.get("lastname"),
+                search.get("email"),
+                search.get("phoneNumber"),
+                PageRequest.of(page, length, Sort.by(Sort.Direction.ASC, "id"))
+        );
+        log.debug("Done getAll() on page:{}. Employees list size:{}", page, employees.getContent().size());
+        return new EmployeeWithDatatableSettings(draw, repository.count(), employees.getTotalElements(), employees.getContent());
     }
 
     public Employee save(Employee employee) {
@@ -56,16 +78,10 @@ public class EmployeeService {
         log.debug("Done delete(). Id of deleted employee: " + id);
     }
 
-    public List<Employee> getFilter(
-            @Nullable String name,
-            @Nullable String lastname,
-            @Nullable String email,
-            @Nullable String phoneNumber
-    ) {
-        log.debug("getFilter() with parameters: name:{}, lastname:{}," +
-                "email:{}, phoneNumber:{}", name, lastname, email, phoneNumber);
-        List<Employee> filteredList = repository.getFilter(name, lastname, email, phoneNumber);
-        log.debug("Done getFilter(). Size of filtered list: " + filteredList.size());
-        return filteredList;
+    public Long count() {
+        log.debug("count()...");
+        Long count = repository.count();
+        log.debug("Done count()... Value is: " + count);
+        return count;
     }
 }
