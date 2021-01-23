@@ -1,13 +1,17 @@
 package com.arsenev.employees.model;
 
+import com.arsenev.employees.util.DateTimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "employee")
@@ -49,4 +53,8 @@ public class Employee {
     @Size(min = 11, max = 11, message = "Phone number must be 11 characters")
     private String phoneNumber;
 
+    @NotNull
+    @Column(name = "edit_time")
+    @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_PATTERN)
+    private LocalDateTime editTime;
 }

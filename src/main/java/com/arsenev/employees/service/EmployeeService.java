@@ -43,8 +43,15 @@ public class EmployeeService {
     ) {
         log.debug("getAll() with parameters: start:{}, length:{}, searchJson:{}",
                 start, length, searchJson);
-        Map<String, String> search = JsonUtil.readValue(searchJson, Map.class);
         int page = start / length;
+        if (searchJson == null) {
+            Page<Employee> employees = repository.findAll(
+                    PageRequest.of(page, length, Sort.by(Sort.Direction.ASC, "id"))
+            );
+            log.debug("Done getAll() on page:{}. Employees list size:{}", page, employees.getContent().size());
+            return new EmployeeWithDatatableSettings(draw, repository.count(), employees.getTotalElements(), employees.getContent());
+        }
+        Map<String, String> search = JsonUtil.readValue(searchJson, Map.class);
         Page<Employee> employees = repository.findAll(
                 search.get("name"),
                 search.get("lastname"),

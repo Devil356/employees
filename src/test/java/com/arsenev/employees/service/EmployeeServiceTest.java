@@ -1,7 +1,7 @@
 package com.arsenev.employees.service;
 
 import com.arsenev.employees.model.Employee;
-import com.arsenev.employees.testData.EmployeeTestData;
+import com.arsenev.employees.EmployeeTestData;
 import com.arsenev.employees.util.exception.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,8 @@ import org.springframework.test.context.jdbc.SqlConfig;
 
 import javax.transaction.Transactional;
 
-import static com.arsenev.employees.testData.EmployeeTestData.getNew;
-import static com.arsenev.employees.testData.EmployeeTestData.getUpdated;
+import static com.arsenev.employees.EmployeeTestData.getNew;
+import static com.arsenev.employees.EmployeeTestData.getUpdated;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -25,8 +25,8 @@ public class EmployeeServiceTest {
 
     @Test
     void delete() {
-        service.delete(EmployeeTestData.EMPLOYEE9.getId());
-        assertThrows(NotFoundException.class, () -> service.get(EmployeeTestData.EMPLOYEE9.getId()));
+        service.delete(EmployeeTestData.EMPLOYEE5.getId());
+        assertThrows(NotFoundException.class, () -> service.get(EmployeeTestData.EMPLOYEE5.getId()));
     }
 
     @Test
@@ -41,8 +41,8 @@ public class EmployeeServiceTest {
 
     @Test
     void get() {
-        Employee actual = service.get(EmployeeTestData.EMPLOYEE9.getId());
-        Employee createdEmployee = EmployeeTestData.EMPLOYEE9;
+        Employee actual = service.get(EmployeeTestData.EMPLOYEE5.getId());
+        Employee createdEmployee = EmployeeTestData.EMPLOYEE5;
         createdEmployee.setId(actual.getId());
         assertEquals(actual, createdEmployee);
     }

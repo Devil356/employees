@@ -9,7 +9,8 @@ CREATE TABLE employee
     name         VARCHAR NOT NULL,
     lastname     VARCHAR NOT NULL,
     email        VARCHAR NOT NULL,
-    phone_number VARCHAR NOT NULL
+    phone_number VARCHAR NOT NULL,
+    edit_time TIMESTAMP default now() NOT NULL
 );
 
--- CREATE UNIQUE INDEX employee_unique_email_idx ON employee (email);
+CREATE UNIQUE INDEX employee_unique_email_idx ON employee (email);

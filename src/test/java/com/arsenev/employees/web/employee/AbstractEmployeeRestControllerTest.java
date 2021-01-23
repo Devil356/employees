@@ -33,7 +33,7 @@ public abstract class AbstractEmployeeRestControllerTest {
 
     protected MockMvc mockMvc;
 
-    protected static final String REST_URL = EmployeeRestController.REST_URL + '/';
+    protected static final String REST_URL = EmployeeRestController.REST_URL;
 
     @PostConstruct
     private void postConstruct() {

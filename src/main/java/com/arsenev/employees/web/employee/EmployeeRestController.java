@@ -1,26 +1,17 @@
 package com.arsenev.employees.web.employee;
 
-
 import com.arsenev.employees.model.Employee;
-import com.arsenev.employees.repository.EmployeeRepository;
 import com.arsenev.employees.util.EmployeeWithDatatableSettings;
-import com.arsenev.employees.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * RestController для передачи данных для отрисовки в Datatables.
@@ -35,11 +26,6 @@ import java.util.stream.Collectors;
 @RequestMapping(value = EmployeeRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class EmployeeRestController extends AbstractEmployeeController {
     public static final String REST_URL = "/rest";
-
-    @Autowired
-    private EmployeeRepository repository;
-
-    private static final Logger log = LoggerFactory.getLogger(EmployeeRestController.class);
 
     @GetMapping
     public EmployeeWithDatatableSettings findAll(
