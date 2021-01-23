@@ -1,21 +1,15 @@
 package com.arsenev.employees.web.employee;
 
-import com.arsenev.employees.model.Employee;
 import com.arsenev.employees.EmployeeTestData;
-import com.arsenev.employees.service.EmployeeService;
-import com.arsenev.employees.util.EmployeeWithDatatableSettings;
+import com.arsenev.employees.model.Employee;
 import com.arsenev.employees.util.JsonUtil;
 import com.arsenev.employees.util.exception.NotFoundException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 import static com.arsenev.employees.EmployeeTestData.*;
 import static com.arsenev.employees.util.exception.ErrorType.APP_ERROR;
@@ -28,12 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class EmployeeRestControllerTest extends AbstractEmployeeRestControllerTest {
 
-    @Autowired
-    private EmployeeService service;
-
     @Test
     void getAll() throws Exception {
-        EmployeeWithDatatableSettings e = service.getAll(0,10,10,null);
         mockMvc.perform(MockMvcRequestBuilders.get(REST_URL+"?draw=0&start=10&length=10"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -50,7 +40,7 @@ public class EmployeeRestControllerTest extends AbstractEmployeeRestControllerTe
         Employee created = JsonUtil.getMapper().readValue(action.andReturn().getResponse().getContentAsString(), Employee.class);
         Long newId = created.getId();
         newEmployee.setId(newId);
-        Assertions.assertEquals(newEmployee, created);
+        EMPLOYEE_MATCHER.assertMatch(newEmployee, created);
     }
 
     @Test
@@ -90,12 +80,12 @@ public class EmployeeRestControllerTest extends AbstractEmployeeRestControllerTe
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        Assertions.assertEquals(service.get(updated.getId()), updated);
+        EMPLOYEE_MATCHER.assertMatch(service.get(updated.getId()), updated);
     }
 
     @Test
     void createInvalid() throws Exception {
-        Employee invalid = new Employee(null, "Invalid", "Invalidov", "200", null, LocalDateTime.of(2000, 1, 10, 2, 30));
+        Employee invalid = new Employee(null, "Invalid", "Invalidov", "200", null);
         mockMvc.perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -106,7 +96,7 @@ public class EmployeeRestControllerTest extends AbstractEmployeeRestControllerTe
 
     @Test
     void updateInvalid() throws Exception {
-        Employee invalid = new Employee(EMPLOYEE5.getId(), null, null, "aaa", null, null);
+        Employee invalid = new Employee(EMPLOYEE5.getId(), null, null, "aaa", null);
         mockMvc.perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -118,7 +108,7 @@ public class EmployeeRestControllerTest extends AbstractEmployeeRestControllerTe
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void updateDuplicateEmail() throws Exception {
-        Employee invalid = new Employee(EMPLOYEE5.getId(), "aa", "aa", EMPLOYEE1.getEmail(), "12345678901", LocalDateTime.of(2000, 1, 10, 2, 30));
+        Employee invalid = new Employee(EMPLOYEE5.getId(), "aa", "aa", EMPLOYEE1.getEmail(), "12345678901");
 
         mockMvc.perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -131,7 +121,7 @@ public class EmployeeRestControllerTest extends AbstractEmployeeRestControllerTe
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void createDuplicateEmail() throws Exception {
-        Employee invalid = new Employee(null, "Invalid", "Invalidov", EMPLOYEE1.getEmail(), "12345678901", LocalDateTime.of(2000, 1, 10, 2, 30));
+        Employee invalid = new Employee(null, "Invalid", "Invalidov", EMPLOYEE1.getEmail(), "12345678901");
         mockMvc.perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))

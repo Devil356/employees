@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "employee")
@@ -54,7 +55,14 @@ public class Employee {
     private String phoneNumber;
 
     @NotNull
-    @Column(name = "edit_time")
-    @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_PATTERN)
-    private LocalDateTime editTime;
+    @Column(name = "edit_time", nullable = false, columnDefinition = "timestamp default now()")
+    private Date editTime = new Date();
+
+    public Employee(Long id, @NotBlank @Size(min = 2, max = 100, message = "Name must be between 2 to 100 symbols") String name, @NotBlank @Size(min = 2, max = 100, message = "Lastname must be between 2 to 100 symbols") String lastname, @Email @NotBlank @Size(max = 100, message = "Length must be to 100 symbols") String email, @NotBlank @Size(min = 11, max = 11, message = "Phone number must be 11 characters") String phoneNumber) {
+        this.id = id;
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
 }

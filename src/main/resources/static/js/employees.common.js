@@ -30,7 +30,6 @@ function makeEditable(datatableOpts) {
                 url: employeeAjaxUrl,
                 "data": function (d) {
                     ajaxData = d;
-                    // console.log(d)
                     return $.extend({}, d, {
                         "search": JSON.stringify(getFormData($('.header')))
                     })

@@ -11,8 +11,7 @@ import org.springframework.test.context.jdbc.SqlConfig;
 
 import javax.transaction.Transactional;
 
-import static com.arsenev.employees.EmployeeTestData.getNew;
-import static com.arsenev.employees.EmployeeTestData.getUpdated;
+import static com.arsenev.employees.EmployeeTestData.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -20,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Sql(scripts = {"classpath:data.sql"}, config = @SqlConfig(encoding = "UTF-8"))
 @Transactional
 public class EmployeeServiceTest {
+
     @Autowired
     protected EmployeeService service;
 
@@ -35,8 +35,8 @@ public class EmployeeServiceTest {
         Long newId = created.getId();
         Employee newEmployee = getNew();
         newEmployee.setId(newId);
-        assertEquals(created, newEmployee);
-        assertEquals(service.get(newId), newEmployee);
+        EMPLOYEE_MATCHER.assertMatch(created, newEmployee);
+        EMPLOYEE_MATCHER.assertMatch(service.get(newId), newEmployee);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class EmployeeServiceTest {
         Employee actual = service.get(EmployeeTestData.EMPLOYEE5.getId());
         Employee createdEmployee = EmployeeTestData.EMPLOYEE5;
         createdEmployee.setId(actual.getId());
-        assertEquals(actual, createdEmployee);
+        EMPLOYEE_MATCHER.assertMatch(actual, createdEmployee);
     }
 
     @Test
@@ -56,6 +56,6 @@ public class EmployeeServiceTest {
     void update() {
         Employee updated = getUpdated();
         service.save(updated);
-        assertEquals(service.get(updated.getId()), getUpdated());
+        EMPLOYEE_MATCHER.assertMatch(service.get(updated.getId()), getUpdated());
     }
 }
