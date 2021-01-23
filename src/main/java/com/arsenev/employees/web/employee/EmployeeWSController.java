@@ -1,6 +1,8 @@
 package com.arsenev.employees.web.employee;
 
-import com.arsenev.employees.util.WebSocket.Edit;
+import com.arsenev.employees.model.Employee;
+import com.arsenev.employees.util.JsonUtil;
+import com.arsenev.employees.util.WebSocket.Delete;
 import com.arsenev.employees.util.WebSocket.Update;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,21 +25,17 @@ public class EmployeeWSController extends AbstractEmployeeController {
 
     @MessageMapping("/requestForUpdate")
     @SendTo("/topic/updateTable")
-    public Update employeeUpdate(String jsonString) throws JsonProcessingException {
-        log.debug("ws json:{}", jsonString);
-        ObjectMapper om = new ObjectMapper();
-        Map map = om.readValue(jsonString, Map.class);
-        Integer draw = (Integer) map.get("draw");
-        Integer length = (Integer) map.get("length");
-        Integer start = (Integer) map.get("start");
-        log.debug("draw:{}, length:{}, start: {}", draw, length, start);
-        return new Update(Long.valueOf(draw), Long.valueOf(length), Long.valueOf(start));
+    public Employee employeeUpdate(String jsonString) {
+        log.debug("jsonString: {}", jsonString);
+        Employee editedEmployee = JsonUtil.readValue(jsonString, Employee.class);
+        log.debug("Edited employee: {}", editedEmployee);
+        return editedEmployee;
     }
 
-    @MessageMapping("/requestForEdit")
-    @SendTo("/topic/edit")
-    public Edit employeeEdit(Edit edit){
-        log.debug("edit:{}",edit.getId());
-        return new Edit(edit.getId());
+    @MessageMapping("/requestForDelete")
+    @SendTo("/topic/delete")
+    public Delete employeeDelete(Delete delete){
+        log.debug("delete:{}",delete.getId());
+        return new Delete(delete.getId());
     }
 }

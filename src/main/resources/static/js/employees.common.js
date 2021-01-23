@@ -13,7 +13,6 @@ var form
 
 var ajaxData
 
-var editedId
 /**
  * Данный метод является родителем для создания таблиц. Метод содержит
  * в себе общие настройки для создания таблиц.
@@ -80,6 +79,11 @@ function failNoty(jqXHR) {
  * Закрывает всплывающее уведомление.
  */
 function closeNoty() {
+    var el = document.getElementById('detailsForm')
+    if (el.hasAttribute('value')) {
+        $('#detailsForm').attr('value', '')
+    }
+    restoreColors()
     if (failedNote) {
         failedNote.close()
         failedNote = undefined
@@ -136,7 +140,7 @@ function renderDeleteBtn(data, type, row) {
  * данными работника.
  */
 function updateRow(id) {
-    editedId = id
+    $('#detailsForm').attr('value', id)
     form.find(":input").val("")
     $.get(ctx.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
@@ -144,9 +148,37 @@ function updateRow(id) {
         })
         $("#editRow").modal()
     })
-    sendEditReq(id)
 }
 
+function pushChanges(updatedEmployee) {
+    var el = document.getElementById('detailsForm')
+    if (el.hasAttribute('value')) {
+        if (el.getAttribute('value') == (updatedEmployee.id)) {
+            alert("You're edit already changed value!")
+            var oldForm = form
+            $.get(ctx.ajaxUrl + updatedEmployee.id, function (data) {
+                $.each(data, function (key, value) {
+                    form.find("input[name='" + key + "']").val(value)
+                    document.getElementById(key).classList.add("bg-success", "text-light")
+                })
+            })
+        }
+    }
+    ctx.datatableApi.ajax.reload(null, false)
+}
+
+function restoreColors() {
+    var inputId = document.getElementsByTagName('input')
+    for (let i = 0; i<inputId.length; i++){
+        if (inputId.item(i).hasAttribute("class")) {
+            inputId.item(i).classList.remove("bg-success", "text-light")
+        }
+    }
+
+
+}
+
+//TODO: static backdrop (bootstrap)
 /**
  * Метод удаляет строку с требуемым id, который передается в
  * параметре @param id.
@@ -157,7 +189,7 @@ function deleteRow(id) {
             type: "DELETE",
             url: ctx.ajaxUrl + id,
             success: function (data) {
-                sendDeleteReq(ajaxData)
+                sendDeleteReq(id)
                 // ctx.datatableApi.ajax.reload(null, false)
                 successNoty("Удалено.")
             }
@@ -186,10 +218,11 @@ function save() {
         contentType: 'application/json',
         data: JSON.stringify(getFormData(form)),
         success: function (data) {
-            console.log(data)
             $("#editRow").modal("hide")
-            sendSaveReq(ajaxData)
             successNoty("Успешно!")
+            $('#detailsForm').attr("value", "")
+            restoreColors();
+            sendSaveReq(data)
         }
     })
 }
@@ -210,12 +243,4 @@ function getFormData(form) {
     });
 
     return indexed_array;
-}
-
-//TODO:implement this method
-function checkIfEdit(id){
-    if (editedId==id){
-        $("#modalTitle").html("YOU EDIT THE SAME VALUE!")
-        console.log("YOU EDIT THE SAME VALUE!")
-    }
 }

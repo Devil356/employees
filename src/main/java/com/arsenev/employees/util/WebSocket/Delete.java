@@ -1,13 +1,13 @@
 package com.arsenev.employees.util.WebSocket;
 
-public class Edit {
+public class Delete {
     private Long id;
 
-    public Edit() {
+    public Delete(Long id) {
+        this.id = id;
     }
 
-    public Edit(Long id) {
-        this.id = id;
+    public Delete() {
     }
 
     public Long getId() {

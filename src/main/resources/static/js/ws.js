@@ -20,12 +20,12 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame)
 
-        stompClient.subscribe('/topic/updateTable', update => {
-            ctx.datatableApi.ajax.reload(null, false)
+        stompClient.subscribe('/topic/updateTable', updatedEmployee => {
+            pushChanges(JSON.parse(updatedEmployee.body))
         })
 
-        stompClient.subscribe('/topic/edit', edit => {
-            checkIfEdit(JSON.parse(edit.body).id)
+        stompClient.subscribe('/topic/delete', edit => {
+            ctx.datatableApi.ajax.reload(null, false)
         })
     })
 }
@@ -35,16 +35,11 @@ function connect() {
  * в методах сохранения (employees.common.js#save()) и удаления (employees.common.js#delete())
  * записей в таблице.
  */
-function sendSaveReq(request) {
-    stompClient.send("/app/requestForUpdate", {}, JSON.stringify(request))
+function sendSaveReq(data) {
+    stompClient.send("/app/requestForUpdate", {}, JSON.stringify(data))
 }
 
-function sendDeleteReq(request) {
-    stompClient.send("/app/requestForUpdate", {}, JSON.stringify(request))
+function sendDeleteReq(id) {
+    stompClient.send("/app/requestForDelete", {}, JSON.stringify({"id": id}))
 }
-
-function sendEditReq(id) {
-    stompClient.send("/app/requestForEdit", {}, JSON.stringify({"id": id}))
-}
-
 
