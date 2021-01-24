@@ -41,13 +41,18 @@ function drawTable() {
             {
                 "defaultContent": "",
                 "orderable": false,
+                "render": renderHistoryBtn
+            },
+            {
+                "defaultContent": "",
+                "orderable": false,
                 "render": renderEditBtn
             },
             {
                 "defaultContent": "",
                 "orderable": false,
                 "render": renderDeleteBtn
-            }
+            },
         ]
     })
 }

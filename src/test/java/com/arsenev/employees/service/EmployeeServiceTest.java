@@ -1,7 +1,7 @@
 package com.arsenev.employees.service;
 
-import com.arsenev.employees.model.Employee;
 import com.arsenev.employees.EmployeeTestData;
+import com.arsenev.employees.model.Employee;
 import com.arsenev.employees.util.exception.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import javax.transaction.Transactional;
 
 import static com.arsenev.employees.EmployeeTestData.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest

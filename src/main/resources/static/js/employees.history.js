@@ -1,0 +1,1 @@
+var historyAjaxUrl = "/rest/history/"

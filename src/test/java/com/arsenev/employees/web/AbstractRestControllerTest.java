@@ -1,6 +1,5 @@
-package com.arsenev.employees.web.employee;
+package com.arsenev.employees.web;
 
-import com.arsenev.employees.service.EmployeeService;
 import com.arsenev.employees.util.exception.ErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @Transactional
-public abstract class AbstractEmployeeRestControllerTest {
+public class AbstractRestControllerTest {
     private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
 
     static {
@@ -28,12 +27,7 @@ public abstract class AbstractEmployeeRestControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    @Autowired
-    protected EmployeeService service;
-
     protected MockMvc mockMvc;
-
-    protected static final String REST_URL = EmployeeRestController.REST_URL;
 
     @PostConstruct
     private void postConstruct() {

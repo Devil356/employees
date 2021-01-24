@@ -11,8 +11,6 @@
  */
 var form
 
-var ajaxData
-
 /**
  * Данный метод является родителем для создания таблиц. Метод содержит
  * в себе общие настройки для создания таблиц.
@@ -28,7 +26,6 @@ function makeEditable(datatableOpts) {
             "ajax": {
                 url: employeeAjaxUrl,
                 "data": function (d) {
-                    ajaxData = d;
                     return $.extend({}, d, {
                         "search": JSON.stringify(getFormData($('.header')))
                     })
@@ -134,6 +131,26 @@ function renderDeleteBtn(data, type, row) {
     }
 }
 
+function renderHistoryBtn(data, type, row) {
+    if (type === "display") {
+        return "<a onclick='showHistory(" + row.id + ")'><span class='fa fa-history'></span></a>"
+    }
+}
+
+function showHistory(id) {
+    $.ajax({
+        type: "GET",
+        url: historyAjaxUrl + id,
+        success: function (data) {
+            showTableWithHistory(data)
+        }
+    })
+}
+
+function showTableWithHistory(data) {
+    console.log(data)
+}
+
 /**
  * Метод открывает форму редактирования работника с переданным id в
  * качестве параметра @param id и заполняет форму уже существующими
@@ -155,10 +172,9 @@ function pushChanges(updatedEmployee) {
     if (el.hasAttribute('value')) {
         if (el.getAttribute('value') == (updatedEmployee.id)) {
             alert("You're edit already changed value!")
-            var oldForm = form
             $.get(ctx.ajaxUrl + updatedEmployee.id, function (data) {
                 $.each(data, function (key, value) {
-                    form.find("input[name='" + key + "']").val(value)
+                    // form.find("input[name='" + key + "']").val(value)
                     document.getElementById(key).classList.add("bg-success", "text-light")
                 })
             })
@@ -169,7 +185,7 @@ function pushChanges(updatedEmployee) {
 
 function restoreColors() {
     var inputId = document.getElementsByTagName('input')
-    for (let i = 0; i<inputId.length; i++){
+    for (let i = 0; i < inputId.length; i++) {
         if (inputId.item(i).hasAttribute("class")) {
             inputId.item(i).classList.remove("bg-success", "text-light")
         }

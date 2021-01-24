@@ -2,9 +2,12 @@ package com.arsenev.employees.web.employee;
 
 import com.arsenev.employees.EmployeeTestData;
 import com.arsenev.employees.model.Employee;
+import com.arsenev.employees.service.EmployeeService;
 import com.arsenev.employees.util.JsonUtil;
 import com.arsenev.employees.util.exception.NotFoundException;
+import com.arsenev.employees.web.AbstractRestControllerTest;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,11 +23,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class EmployeeRestControllerTest extends AbstractEmployeeRestControllerTest {
+public class EmployeeRestControllerTest extends AbstractRestControllerTest {
+    protected static final String REST_URL = EmployeeRestController.REST_URL;
+
+    @Autowired
+    protected EmployeeService service;
 
     @Test
     void getAll() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL+"?draw=0&start=10&length=10"))
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + "?draw=0&start=10&length=10"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
