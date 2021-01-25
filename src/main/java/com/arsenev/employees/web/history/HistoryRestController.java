@@ -6,11 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.arsenev.employees.web.history.HistoryRestController.REST_URL;
@@ -26,10 +24,20 @@ public class HistoryRestController {
     private HistoryService service;
 
     @GetMapping("/{id}")
-    public List<History> getHistory(@PathVariable Long id) {
-        log.debug("getHistory() with id: {}...", id);
+    public List<History> get(
+            @PathVariable Long id
+    ) {
+        log.debug("get() with id: {}...", id);
         List<History> history = service.getAllById(id);
-        log.debug("Done getHistory(). List size: {}", history.size());
+        log.debug("Done get(). List size: {}", history.size());
+        return history;
+    }
+
+    @GetMapping
+    public List<History> get() {
+        log.debug("get()...");
+        List<History> history = new ArrayList<>();
+        log.debug("Done get()");
         return history;
     }
 }

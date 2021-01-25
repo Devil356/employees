@@ -9,6 +9,7 @@ var stompClient = null
 $(function () {
     connect()
     drawTable()
+    drawHistoryTable("")
 })
 
 /**

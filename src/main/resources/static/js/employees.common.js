@@ -18,13 +18,13 @@ var form
  * параметры, которые для каждой таблицы индивидуальны. Например,
  * содержание колонок (параметр columns[]).
  */
-function makeEditable(datatableOpts) {
+function makeEditable(id, url, datatableOpts) {
     ctx.datatableApi = $("#datatable").DataTable(
         $.extend(true, datatableOpts, {
             processing: true,
             serverSide: true,
             "ajax": {
-                url: employeeAjaxUrl,
+                url: url + id,
                 "data": function (d) {
                     return $.extend({}, d, {
                         "search": JSON.stringify(getFormData($('.header')))
@@ -133,22 +133,34 @@ function renderDeleteBtn(data, type, row) {
 
 function renderHistoryBtn(data, type, row) {
     if (type === "display") {
-        return "<a onclick='showHistory(" + row.id + ")'><span class='fa fa-history'></span></a>"
+        return "<button onclick='showHistory("+row.id+")' type='button'  data-toggle='modal' data-target='#historyModal'><span class='fa fa-history'></span></button>"
     }
 }
 
 function showHistory(id) {
+    var newId
+    if (id==''){
+        newId = $('#hisTab').attr('value')
+    } else {
+        newId = id
+    }
+    var el = document.getElementById('modalDialog')
+    el.classList.add("modal-xl")
     $.ajax({
         type: "GET",
-        url: historyAjaxUrl + id,
+        url: historyAjaxUrl+newId,
         success: function (data) {
-            showTableWithHistory(data)
+            historyCtx.datatableApi.clear().rows.add(data).draw();
         }
     })
+
 }
 
-function showTableWithHistory(data) {
-    console.log(data)
+function removeModalXlClass(){
+    var el = document.getElementById('modalDialog')
+    if (el.classList.contains("modal-xl")){
+        el.classList.remove("modal-xl")
+    }
 }
 
 /**
@@ -158,6 +170,7 @@ function showTableWithHistory(data) {
  */
 function updateRow(id) {
     $('#detailsForm').attr('value', id)
+    $('#hisTab').attr('value', id)
     form.find(":input").val("")
     $.get(ctx.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
@@ -206,7 +219,6 @@ function deleteRow(id) {
             url: ctx.ajaxUrl + id,
             success: function (data) {
                 sendDeleteReq(id)
-                // ctx.datatableApi.ajax.reload(null, false)
                 successNoty("Удалено.")
             }
         })

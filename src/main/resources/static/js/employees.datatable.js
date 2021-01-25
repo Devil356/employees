@@ -20,7 +20,7 @@ var ctx = {
  * файле (employees.common.js)
  */
 function drawTable() {
-    makeEditable({
+    makeEditable("", employeeAjaxUrl,{
         "columns": [
             {
                 "data": "name",
