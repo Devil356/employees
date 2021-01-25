@@ -22,11 +22,14 @@ function connect() {
         console.log('Connected: ' + frame)
 
         stompClient.subscribe('/topic/updateTable', updatedEmployee => {
+            ctx.datatableApi.ajax.reload(null, false)
+            showHistory(JSON.parse(updatedEmployee.body).id)
             pushChanges(JSON.parse(updatedEmployee.body))
         })
 
         stompClient.subscribe('/topic/delete', edit => {
             ctx.datatableApi.ajax.reload(null, false)
+            showHistory(JSON.parse(updatedEmployee.body).id)
         })
     })
 }
