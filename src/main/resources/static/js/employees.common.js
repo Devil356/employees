@@ -18,13 +18,13 @@ var form
  * параметры, которые для каждой таблицы индивидуальны. Например,
  * содержание колонок (параметр columns[]).
  */
-function makeEditable(id, url, datatableOpts) {
+function makeEditable(url, datatableOpts) {
     ctx.datatableApi = $("#datatable").DataTable(
         $.extend(true, datatableOpts, {
             processing: true,
             serverSide: true,
             "ajax": {
-                url: url + id,
+                url: url,
                 "data": function (d) {
                     return $.extend({}, d, {
                         "search": JSON.stringify(getFormData($('.header')))
@@ -60,13 +60,13 @@ var failedNote
 
 /**
  * Установка значения переменной failedNote и показ ошибки.
- * Данные об ошибке переданы в параметре @param jqXHR
+ * @param jqXHR - данные об ошибке
  */
 function failNoty(jqXHR) {
     closeNoty()
     var errorInfo = jqXHR.responseJSON
     failedNote = new Noty({
-        text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + errorInfo.typeMessage + "<br>",
+        text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp" + errorInfo.typeMessage + "<br>",
         type: "error",
         layout: "bottomRight"
     }).show()
@@ -81,6 +81,7 @@ function closeNoty() {
         $('#detailsForm').attr('value', '')
     }
     restoreColors()
+    removeModalXlClass()
     if (failedNote) {
         failedNote.close()
         failedNote = undefined
@@ -131,16 +132,25 @@ function renderDeleteBtn(data, type, row) {
     }
 }
 
+/**
+ * Метод отрисовки кнопки History.
+ * Параметры взяты из метода DataTables columns.render.
+ * https://datatables.net/manual/data/renderers
+ * @param data - данные о строке
+ * @param type
+ * @param row - объект изменяемой строки
+ * @returns {string}
+ */
 function renderHistoryBtn(data, type, row) {
     if (type === "display") {
-        return "<button onclick='showHistory("+row.id+")' type='button'  data-toggle='modal' data-target='#historyModal'><span class='fa fa-history'></span></button>"
+        return "<button onclick='showHistory(" + row.id + ")' type='button'  data-toggle='modal' data-target='#historyModal'><span class='fa fa-history'></span></button>"
     }
 }
 
 function showHistory(id) {
     var newId
-    if (id==''){
-        newId = $('#hisTab').attr('value')
+    if (id == '') {
+        newId = $('#detailsForm').attr('value')
     } else {
         newId = id
     }
@@ -148,7 +158,7 @@ function showHistory(id) {
     el.classList.add("modal-xl")
     $.ajax({
         type: "GET",
-        url: historyAjaxUrl+newId,
+        url: historyAjaxUrl + newId,
         success: function (data) {
             historyCtx.datatableApi.clear().rows.add(data).draw();
         }
@@ -156,12 +166,6 @@ function showHistory(id) {
 
 }
 
-function removeModalXlClass(){
-    var el = document.getElementById('modalDialog')
-    if (el.classList.contains("modal-xl")){
-        el.classList.remove("modal-xl")
-    }
-}
 
 /**
  * Метод открывает форму редактирования работника с переданным id в
@@ -170,7 +174,6 @@ function removeModalXlClass(){
  */
 function updateRow(id) {
     $('#detailsForm').attr('value', id)
-    $('#hisTab').attr('value', id)
     form.find(":input").val("")
     $.get(ctx.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
@@ -180,34 +183,24 @@ function updateRow(id) {
     })
 }
 
+/**
+ * Метод для обозначения того, что кто-то изменил редактируемую
+ * в текущий момент запись.
+ * @param updatedEmployee
+ */
 function pushChanges(updatedEmployee) {
     var el = document.getElementById('detailsForm')
     if (el.hasAttribute('value')) {
         if (el.getAttribute('value') == (updatedEmployee.id)) {
-            alert("You're edit already changed value!")
             $.get(ctx.ajaxUrl + updatedEmployee.id, function (data) {
                 $.each(data, function (key, value) {
-                    // form.find("input[name='" + key + "']").val(value)
                     document.getElementById(key).classList.add("bg-success", "text-light")
                 })
             })
         }
     }
-    ctx.datatableApi.ajax.reload(null, false)
 }
 
-function restoreColors() {
-    var inputId = document.getElementsByTagName('input')
-    for (let i = 0; i < inputId.length; i++) {
-        if (inputId.item(i).hasAttribute("class")) {
-            inputId.item(i).classList.remove("bg-success", "text-light")
-        }
-    }
-
-
-}
-
-//TODO: static backdrop (bootstrap)
 /**
  * Метод удаляет строку с требуемым id, который передается в
  * параметре @param id.
@@ -249,26 +242,48 @@ function save() {
             $("#editRow").modal("hide")
             successNoty("Успешно!")
             $('#detailsForm').attr("value", "")
-            restoreColors();
+            restoreColors()
+            removeModalXlClass()
             sendSaveReq(data)
         }
     })
 }
 
 /**
- * Утильный метод. Преобразовывает данные из формы в формат JSON,
+ * Вспомогательный метод, для восстановления стилей
+ */
+function restoreColors() {
+    var inputId = document.getElementsByTagName('input')
+    for (let i = 0; i < inputId.length; i++) {
+        if (inputId.item(i).hasAttribute("class")) {
+            inputId.item(i).classList.remove("bg-success", "text-light")
+        }
+    }
+}
+/**
+ * Вспомогательный метод, для восстановления стилей
+ */
+function removeModalXlClass() {
+    var el = document.getElementById('modalDialog')
+    if (el.classList.contains("modal-xl")) {
+        el.classList.remove("modal-xl")
+    }
+}
+
+/**
+ * Утилитный метод. Преобразовывает данные из формы в формат JSON,
  * для дальнейшей передачи объекта из формы в Rest Controller для сохранения
  * или обновления
  * @param form - глобальная переменная формы с данными о добавляемом/изменяемом сотруднике.
  * @returns массив с данными в формате JSON.
  */
 function getFormData(form) {
-    var unindexed_array = form.serializeArray();
-    var indexed_array = {};
+    var unindexed_array = form.serializeArray()
+    var indexed_array = {}
 
     $.map(unindexed_array, function (n, i) {
-        indexed_array[n['name']] = n['value'];
-    });
+        indexed_array[n['name']] = n['value']
+    })
 
-    return indexed_array;
+    return indexed_array
 }

@@ -2,14 +2,14 @@
  * Глобальная переменная, адрес к ресурсам Rest контроллера.
  * @type {string}
  */
-var employeeAjaxUrl = "rest/"
+let employeeAjaxUrl = "rest/";
 
 /**
  * Глобальная переменная, инициализируется каждый раз во время отрисовки таблицы,
  * с учетом фильтра по полям. При каждой инициализации перерисовывает таблицу.
  * @type {{ajaxUrl: string, updateTable: ctx.updateTable}}
  */
-var ctx = {
+let ctx = {
     ajaxUrl: employeeAjaxUrl,
 }
 
@@ -20,7 +20,7 @@ var ctx = {
  * файле (employees.common.js)
  */
 function drawTable() {
-    makeEditable("", employeeAjaxUrl,{
+    makeEditable(employeeAjaxUrl, {
         "columns": [
             {
                 "data": "name",

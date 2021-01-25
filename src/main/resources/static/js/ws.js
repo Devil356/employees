@@ -4,16 +4,16 @@
  * таблицы.
  */
 
-var stompClient = null
+let stompClient = null
 
 $(function () {
     connect()
     drawTable()
-    drawHistoryTable("")
+    drawHistoryTable()
 })
 
 /**
- * Создание нового сокета с подпиской на топик, необходимый для обновления таблицы.
+ * Создание нового сокета с подпиской на топики, необходимые для обновления таблицы.
  */
 function connect() {
     var socket = new SockJS('/employees')

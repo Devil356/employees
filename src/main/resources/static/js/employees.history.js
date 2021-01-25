@@ -1,10 +1,10 @@
-var historyAjaxUrl = "/rest/history/"
+let historyAjaxUrl = "/rest/history/"
 
-var historyCtx = {
+let historyCtx = {
     ajaxUrl: historyAjaxUrl,
 }
 
-function drawHistoryTable(id) {
+function drawHistoryTable() {
     historyCtx.datatableApi = $("#historyTable, #historyTableInHistoryTab").DataTable({
         "ajax": {
             url: historyAjaxUrl,
