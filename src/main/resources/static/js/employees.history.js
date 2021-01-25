@@ -33,7 +33,7 @@ function drawHistoryTable(id) {
         ],
         "order": [
             [
-                4, 'desc'
+                0, 'desc'
             ]
         ]
     })
