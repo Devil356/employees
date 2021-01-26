@@ -1,9 +1,8 @@
 package com.arsenev.employees.web.employee;
 
 import com.arsenev.employees.model.Employee;
+import com.arsenev.employees.service.EmployeeService;
 import com.arsenev.employees.util.EmployeeWithDatatableSettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +25,10 @@ import java.net.URI;
 @RequestMapping(value = EmployeeRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class EmployeeRestController extends AbstractEmployeeController {
     public static final String REST_URL = "/rest";
+
+    public EmployeeRestController(EmployeeService service) {
+        super(service);
+    }
 
     @GetMapping
     public EmployeeWithDatatableSettings findAll(

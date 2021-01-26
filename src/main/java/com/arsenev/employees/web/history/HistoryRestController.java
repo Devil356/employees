@@ -20,8 +20,12 @@ public class HistoryRestController {
 
     private static final Logger log = LoggerFactory.getLogger(HistoryRestController.class);
 
+    private final HistoryService service;
+
     @Autowired
-    private HistoryService service;
+    public HistoryRestController(HistoryService service) {
+        this.service = service;
+    }
 
     @GetMapping("/{id}")
     public List<History> get(

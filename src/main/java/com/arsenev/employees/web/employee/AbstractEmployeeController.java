@@ -13,8 +13,12 @@ import java.util.List;
 public abstract class AbstractEmployeeController {
     private static final Logger log = LoggerFactory.getLogger(AbstractEmployeeController.class);
 
+    private final EmployeeService service;
+
     @Autowired
-    private EmployeeService service;
+    public AbstractEmployeeController(EmployeeService service) {
+        this.service = service;
+    }
 
     protected EmployeeWithDatatableSettings getAll(
             Integer draw,

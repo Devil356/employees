@@ -13,8 +13,12 @@ import java.util.List;
 public class HistoryService {
     private static final Logger log = LoggerFactory.getLogger(HistoryService.class);
 
+    private final HistoryRepository repository;
+
     @Autowired
-    private HistoryRepository repository;
+    public HistoryService(HistoryRepository repository) {
+        this.repository = repository;
+    }
 
     public List<History> getAllById(Long id) {
         log.debug("getAllById() with id: {}...", id);

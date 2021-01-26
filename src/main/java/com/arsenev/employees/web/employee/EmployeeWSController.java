@@ -1,18 +1,14 @@
 package com.arsenev.employees.web.employee;
 
 import com.arsenev.employees.model.Employee;
+import com.arsenev.employees.service.EmployeeService;
 import com.arsenev.employees.util.JsonUtil;
 import com.arsenev.employees.util.WebSocket.Delete;
-import com.arsenev.employees.util.WebSocket.Update;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-
-import java.util.Map;
 
 /**
  * Контроллер подписчиков и подписок для WebSocket.
@@ -22,6 +18,10 @@ import java.util.Map;
 @Controller
 public class EmployeeWSController extends AbstractEmployeeController {
     private static final Logger log = LoggerFactory.getLogger(EmployeeWSController.class);
+
+    public EmployeeWSController(EmployeeService service) {
+        super(service);
+    }
 
     @MessageMapping("/requestForUpdate")
     @SendTo("/topic/updateTable")

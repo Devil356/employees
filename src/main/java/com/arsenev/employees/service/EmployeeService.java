@@ -23,8 +23,12 @@ import java.util.stream.Collectors;
 public class EmployeeService {
     private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
+    private final EmployeeRepository repository;
+
     @Autowired
-    private EmployeeRepository repository;
+    public EmployeeService(EmployeeRepository repository) {
+        this.repository = repository;
+    }
 
     public Employee get(Long id) {
         log.debug("get()...");
