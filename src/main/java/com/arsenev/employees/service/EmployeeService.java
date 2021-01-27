@@ -1,29 +1,29 @@
 package com.arsenev.employees.service;
 
+import com.arsenev.employees.model.Employee;
+import com.arsenev.employees.repository.EmployeeRepository;
 import com.arsenev.employees.util.EmployeeWithDatatableSettings;
 import com.arsenev.employees.util.JsonUtil;
 import com.arsenev.employees.util.exception.NotFoundException;
-import com.arsenev.employees.model.Employee;
-import com.arsenev.employees.repository.EmployeeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
     private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
     private final EmployeeRepository repository;
+
+    private final Map<Long, EmployeeWithDatatableSettings> cacheForGetAll = new HashMap<>();
 
     @Autowired
     public EmployeeService(EmployeeRepository repository) {
@@ -32,8 +32,7 @@ public class EmployeeService {
 
     public Employee get(Long id) {
         log.debug("get()...");
-        Employee employee = null;
-        employee = repository.findById(id)
+        Employee employee = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Employee with id " + id + " not found."));
         log.debug("Done get(). Employee: " + employee);
         return employee;

@@ -1,0 +1,3 @@
+var UUID;
+
+localStorage
