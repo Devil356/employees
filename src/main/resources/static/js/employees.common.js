@@ -27,7 +27,8 @@ function makeEditable(url, datatableOpts) {
                 url: url,
                 "data": function (d) {
                     return $.extend({}, d, {
-                        "search": JSON.stringify(getFormData($('.header')))
+                        "search": JSON.stringify(getFormData($('.header'))),
+                        "UUID":1
                     })
                 },
             },

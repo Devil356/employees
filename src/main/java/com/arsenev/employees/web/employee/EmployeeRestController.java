@@ -35,9 +35,10 @@ public class EmployeeRestController extends AbstractEmployeeController {
             @RequestParam(name = "draw") Integer draw,
             @RequestParam(name = "start") Integer start,
             @RequestParam(name = "length") Integer length,
-            @RequestParam(name = "search", required = false) String searchJson
+            @RequestParam(name = "search", required = false) String searchJson,
+            @RequestParam(name = "UUID") String UUID
     ) {
-        return super.getAll(draw, start, length, searchJson);
+        return super.getAll(draw, start, length, searchJson, UUID);
     }
 
     @GetMapping("/{id}")

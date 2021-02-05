@@ -24,10 +24,11 @@ public abstract class AbstractEmployeeController {
             Integer draw,
             Integer start,
             Integer length,
-            String searchJson
+            String searchJson,
+            String UUID
     ) {
         log.debug("getAll()...");
-        EmployeeWithDatatableSettings e = service.getAll(draw, start, length, searchJson);
+        EmployeeWithDatatableSettings e = service.getAll(draw, start, length, searchJson, UUID);
         log.debug("Done getAll(). Employees list size: " + e.getData().size());
         return e;
     }
